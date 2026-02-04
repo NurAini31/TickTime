@@ -1,0 +1,2508 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Tick Time | Sistem Admin Absensi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+        }
+
+        /* ================= LOGIN PAGE ================= */
+        #login {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .container {
+            background: white;
+            width: 360px;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, .2);
+            text-align: center;
+        }
+
+        .logo-login {
+            font-size: 32px;
+            font-weight: 700;
+            color: #4facfe;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #777;
+            margin: 8px 0 25px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .role-select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            background: white;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #4facfe;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #3a9bf8;
+        }
+
+        .footer {
+            margin-top: 18px;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        /* ================= HOME PAGE (SISWA) ================= */
+        #home {
+            display: none;
+            background: #f4f6f8;
+            min-height: 100vh;
+        }
+
+        .app {
+            padding: 25px;
+            padding-bottom: 90px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .logo span {
+            color: #2f80ed;
+        }
+
+        .illustration {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .illustration img {
+            width: 190px;
+        }
+
+        .absen-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #2f80ed, #56ccf2);
+            border: none;
+            border-radius: 18px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .absen-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* ===== LOG ABSENSI ===== */
+        .log-absen h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .log-item {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .log-item .tanggal {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .log-item .status {
+            margin-top: 4px;
+            font-size: 14px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .status-hadir {
+            background-color: #e7f4ff;
+            color: #2f80ed;
+        }
+
+        .status-izin {
+            background-color: #fff8e1;
+            color: #ff9800;
+        }
+
+        .status-sakit {
+            background-color: #ffebee;
+            color: #f44336;
+        }
+
+        .status-alpha {
+            background-color: #f5f5f5;
+            color: #757575;
+        }
+
+        .status-menunggu {
+            background-color: #f3e5f5;
+            color: #9c27b0;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, .08);
+            font-size: 12px;
+            color: #888;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(79, 172, 254, 0.1);
+        }
+
+        .nav-item.active {
+            color: #2f80ed;
+            font-weight: 600;
+        }
+
+        /* ================= FORM IZIN/SAKIT ================= */
+        #formIzin {
+            display: none;
+            background: #f4f6f8;
+            min-height: 100vh;
+        }
+
+        /* HEADER FORM */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 20px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+        }
+
+        .back {
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* FORM */
+        .form {
+            padding: 20px;
+        }
+
+        .label {
+            font-size: 14px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .toggle {
+            display: flex;
+            background: #eaeaea;
+            border-radius: 30px;
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+
+        .toggle button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .toggle .active {
+            background: #2ec4b6;
+            color: white;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .form-textarea {
+            resize: none;
+            height: 90px;
+        }
+
+        /* UPLOAD */
+        .upload-box {
+            border: 2px dashed #ccc;
+            padding: 18px;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 18px;
+            cursor: pointer;
+        }
+
+        .upload-box img {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 12px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2ec4b6, #00b4d8);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* ================= REKAP PAGE ================= */
+        #rekap {
+            display: none;
+            background: #f4f6f8;
+            min-height: 100vh;
+        }
+
+        .rekap-header {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .rekap-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2f80ed;
+            margin-bottom: 5px;
+        }
+
+        .rekap-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .rekap-content {
+            padding: 20px;
+        }
+
+        .filter-container {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .filter-item label {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            background: #4facfe;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+            align-self: flex-end;
+        }
+
+        .circle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .circle-progress {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 25px;
+        }
+
+        .circle-bg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#ff6b6b 0% 50%, #4facfe 50% 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circle-inner {
+            width: 140px;
+            height: 140px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .total-percentage {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .total-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .legend-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .legend-color {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-hadir {
+            background: #4facfe;
+        }
+
+        .color-tidak-hadir {
+            background: #ff6b6b;
+        }
+
+        .color-izin {
+            background: #ff9800;
+        }
+
+        .color-sakit {
+            background: #f44336;
+        }
+
+        .color-alpha {
+            background: #757575;
+        }
+
+        .legend-text {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .legend-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2f80ed;
+        }
+
+        .data-details {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-hadir {
+            background: #4facfe;
+        }
+
+        .dot-tidak-hadir {
+            background: #ff6b6b;
+        }
+
+        .dot-izin {
+            background: #ff9800;
+        }
+
+        .dot-sakit {
+            background: #f44336;
+        }
+
+        .dot-alpha {
+            background: #757575;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* ================= ADMIN DASHBOARD ================= */
+        #adminDashboard {
+            display: none;
+            min-height: 100vh;
+            background: #f4f6f8;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2f80ed;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .admin-nav {
+            display: flex;
+            background: white;
+            margin: 0 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .admin-nav-item {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .admin-nav-item:hover {
+            background: #f0f7ff;
+        }
+
+        .admin-nav-item.active {
+            background: #2f80ed;
+            color: white;
+        }
+
+        .admin-content {
+            padding: 20px;
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ===== Tabel Kehadiran ===== */
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .attendance-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            font-size: 12px;
+        }
+
+        .attendance-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            font-size: 12px;
+            position: relative;
+        }
+
+        .day-cell {
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .day-cell:hover {
+            background: #f8f9fa;
+        }
+
+        .day-number {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .attendance-status {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .month-header {
+            background: #2f80ed !important;
+            color: white !important;
+            font-size: 14px !important;
+        }
+
+        .libur {
+            background-color: #ffebee;
+            color: #f44336;
+            font-weight: 600;
+        }
+
+        .libur .day-number {
+            color: #f44336;
+        }
+
+        .hadir {
+            background-color: #e7f4ff;
+        }
+
+        .hadir .attendance-status {
+            background-color: #4facfe;
+            color: white;
+        }
+
+        .izin {
+            background-color: #fff8e1;
+        }
+
+        .izin .attendance-status {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .sakit {
+            background-color: #ffebee;
+        }
+
+        .sakit .attendance-status {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .alpha {
+            background-color: #f5f5f5;
+        }
+
+        .alpha .attendance-status {
+            background-color: #757575;
+            color: white;
+        }
+
+        /* ===== Tabel Rekap Semua Siswa ===== */
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 11px;
+        }
+
+        .students-table th {
+            background: #f8f9fa;
+            padding: 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 11px;
+        }
+
+        .students-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 11px;
+        }
+
+        .student-row:hover {
+            background: #f8f9fa;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 3px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4facfe;
+            border-radius: 3px;
+        }
+
+        /* ===== Pengajuan Menunggu ===== */
+        .pending-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .pending-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pending-info {
+            flex: 1;
+        }
+
+        .pending-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .pending-date {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .pending-reason {
+            font-size: 14px;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        .pending-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-approve, .btn-reject {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .btn-approve {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #f44336;
+            color: white;
+        }
+
+        /* ===== Modal ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        /* ===== Modal Pilihan Absen ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-pilihan {
+            background: white;
+            width: 300px;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .modal-title-pilihan {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .modal-btn-absen {
+            background: linear-gradient(135deg, #2f80ed, #56ccf2);
+            color: white;
+        }
+
+        .modal-btn-izin {
+            background: linear-gradient(135deg, #ff9800, #ffb74d);
+            color: white;
+        }
+
+        .modal-btn-batal {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        /* Notifikasi */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1001;
+            animation: slideIn 0.3s ease-out;
+            border-left: 4px solid #4caf50;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            border-left-color: #4caf50;
+        }
+
+        .notification.info {
+            border-left-color: #2196f3;
+        }
+
+        .notification.warning {
+            border-left-color: #ff9800;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== LOGIN PAGE ===== -->
+    <div id="login">
+        <div class="container">
+            <div class="logo-login">Tick Time</div>
+            <div class="tagline">Sistem Admin Absensi Sekolah</div>
+            
+            <form onsubmit="login(event)">
+                <input type="text" id="nama" class="login-input" placeholder="Masukkan Nama" required>
+                <input type="text" id="id" class="login-input" placeholder="Masukkan ID" required>
+                
+                <select id="role" class="role-select">
+                    <option value="siswa">Siswa</option>
+                    <option value="admin">Admin</option>
+                </select>
+                
+                <button type="submit" class="login-btn">LOGIN</button>
+            </form>
+            
+            <div class="footer">© 2026 Tick Time - Sistem Absensi Sekolah</div>
+        </div>
+    </div>
+    
+    <!-- ===== HOME PAGE (SISWA) ===== -->
+    <div id="home">
+        <div class="app">
+            <div class="logo">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="#2f80ed">
+                    <path d="M12 2l9 5v10l-9 5-9-5V7z"/>
+                </svg>
+                Tick<span>Time</span>
+            </div>
+            
+            <div class="illustration">
+                <img src="https://cdn-icons-png.flaticon.com/512/2972/2972531.png" alt="Illustration">
+            </div>
+            
+            <button class="absen-btn" id="btnAbsen">Absensi Sekarang</button>
+            
+            <div class="log-absen">
+                <h3>Log Absensi Terakhir</h3>
+                <div id="logData"></div>
+            </div>
+        </div>
+        
+        <div class="navbar">
+            <div class="nav-item active" onclick="showHome()">
+                <div>Absensi</div>
+            </div>
+            <div class="nav-item" onclick="showRekap()">
+                <div>Rekap</div>
+            </div>
+            <div class="nav-item" id="profileNav" onclick="showProfile()">
+                <div id="profileInitial">SA</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== FORM IZIN/SAKIT ===== -->
+    <div id="formIzin">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="back" onclick="showHome()">←</div>
+            <div class="title">Form Pengajuan Izin / Sakit</div>
+        </div>
+        
+        <!-- FORM -->
+        <div class="form">
+            <div class="label">Jenis Pengajuan</div>
+            <div class="toggle">
+                <button id="izinBtn" class="active" onclick="setJenis('Izin')">Izin</button>
+                <button id="sakitBtn" onclick="setJenis('Sakit')">Sakit</button>
+            </div>
+            
+            <div class="label">Tanggal</div>
+            <input type="date" class="form-input" id="tanggalIzin">
+            
+            <div class="label">Deskripsi Singkat</div>
+            <textarea class="form-textarea" id="deskripsi" placeholder="Contoh: Tidak masuk karena keperluan keluarga"></textarea>
+            
+            <div class="label">Unggah Dokumen Pendukung</div>
+            
+            <!-- UPLOAD FOTO -->
+            <label class="upload-box">
+                <input type="file" class="file-input" accept="image/*" onchange="previewFoto(event)">
+                <div id="uploadText">
+                    Klik untuk unggah foto<br>
+                    <small>contoh: surat dokter</small>
+                </div>
+                <img id="preview" style="display:none;" alt="Preview">
+            </label>
+            
+            <button class="submit-btn" onclick="kirimPengajuan()">Kirim Pengajuan</button>
+        </div>
+    </div>
+    
+    <!-- ===== REKAP PAGE ===== -->
+    <div id="rekap">
+        <div class="rekap-header">
+            <div class="rekap-title">Rekap Kehadiran</div>
+            <div class="rekap-subtitle" id="namaRekap">Siti Nur Afifah</div>
+        </div>
+        
+        <div class="rekap-content">
+            <div class="filter-container">
+                <div class="filter-item">
+                    <label>Dari Bulan</label>
+                    <select id="filterBulanAwal" class="filter-select">
+                        <option value="0">Januari</option>
+                        <option value="1">Februari</option>
+                        <option value="2">Maret</option>
+                        <option value="3">April</option>
+                        <option value="4">Mei</option>
+                        <option value="5">Juni</option>
+                        <option value="6">Juli</option>
+                        <option value="7">Agustus</option>
+                        <option value="8">September</option>
+                        <option value="9">Oktober</option>
+                        <option value="10">November</option>
+                        <option value="11">Desember</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label>Sampai Bulan</label>
+                    <select id="filterBulanAkhir" class="filter-select">
+                        <option value="0">Januari</option>
+                        <option value="1">Februari</option>
+                        <option value="2">Maret</option>
+                        <option value="3">April</option>
+                        <option value="4">Mei</option>
+                        <option value="5">Juni</option>
+                        <option value="6">Juli</option>
+                        <option value="7">Agustus</option>
+                        <option value="8">September</option>
+                        <option value="9">Oktober</option>
+                        <option value="10">November</option>
+                        <option value="11">Desember</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label>Tahun</label>
+                    <select id="filterTahun" class="filter-select">
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                    </select>
+                </div>
+                
+                <button class="filter-btn" onclick="filterRekap()">Filter</button>
+            </div>
+            
+            <div class="circle-container">
+                <div class="circle-progress">
+                    <div class="circle-bg" id="circleBg">
+                        <div class="circle-inner">
+                            <div class="total-percentage" id="totalPercentage">100%</div>
+                            <div class="total-label">Total Kehadiran</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="legend-container">
+                    <div class="legend-item">
+                        <div class="legend-color color-hadir">
+                            <div id="persenHadir">50%</div>
+                        </div>
+                        <div class="legend-text">Hadir</div>
+                        <div class="legend-count" id="countHadir">1x</div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-color color-tidak-hadir">
+                            <div id="persenTidakHadir">50%</div>
+                        </div>
+                        <div class="legend-text">Tidak Hadir</div>
+                        <div class="legend-count" id="countTidakHadir">1x</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-details">
+                <div class="detail-title">Detail Kehadiran (Periode: Januari 2026 - Desember 2026)</div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <div class="dot dot-hadir"></div>
+                        <div>Hadir</div>
+                    </div>
+                    <div class="detail-value">
+                        <span id="detailHadir">1 hari</span>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <div class="dot dot-izin"></div>
+                        <div>Izin</div>
+                    </div>
+                    <div class="detail-value">
+                        <span id="detailIzin">0 hari</span>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <div class="dot dot-sakit"></div>
+                        <div>Sakit</div>
+                    </div>
+                    <div class="detail-value">
+                        <span id="detailSakit">1 hari</span>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <div class="dot dot-alpha"></div>
+                        <div>Alpha (Tanpa Keterangan)</div>
+                    </div>
+                    <div class="detail-value">
+                        <span id="detailAlpha">0 hari</span>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <div>Total Hari Aktif</div>
+                    </div>
+                    <div class="detail-value">
+                        <span id="totalHari">2 hari</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-note">
+                Data diperbarui terakhir: <span id="lastUpdate">27 Januari 2026</span>
+            </div>
+        </div>
+        
+        <div class="navbar">
+            <div class="nav-item" onclick="showHome()">
+                <div>Absensi</div>
+            </div>
+            <div class="nav-item active" onclick="showRekap()">
+                <div>Rekap</div>
+            </div>
+            <div class="nav-item" id="profileNavRekap" onclick="showProfile()">
+                <div id="profileInitialRekap">SA</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== ADMIN DASHBOARD ===== -->
+    <div id="adminDashboard">
+        <div class="admin-header">
+            <div class="admin-title">Dashboard Admin</div>
+            <div class="admin-user">
+                <i class="fas fa-user-shield"></i>
+                <span id="adminName">Siti Nur Afifah (Admin)</span>
+                <button onclick="logout()" style="background: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                    Logout
+                </button>
+            </div>
+        </div>
+        
+        <div class="admin-nav">
+            <div class="admin-nav-item active" onclick="showAdminTab('attendance')">
+                Tabel Kehadiran
+            </div>
+            <div class="admin-nav-item" onclick="showAdminTab('allStudents')">
+                Rekap Semua Siswa
+            </div>
+            <div class="admin-nav-item" onclick="showAdminTab('pending')">
+                Pengajuan Menunggu
+            </div>
+            <div class="admin-nav-item" onclick="showAdminTab('addAlpha')">
+                Input Alpha
+            </div>
+        </div>
+        
+        <div class="admin-content">
+            <!-- Tab 1: Tabel Kehadiran 1 Tahun -->
+            <div id="tabAttendance" class="admin-tab">
+                <div class="admin-card">
+                    <div class="card-title">
+                        Tabel Kehadiran 1 Tahun (2026)
+                        <select id="yearSelect" onchange="generateYearCalendar()" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;">
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                        </select>
+                    </div>
+                    <div id="calendarContainer" style="overflow-x: auto;">
+                        <!-- Kalender akan di-generate oleh JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 2: Rekap Semua Siswa -->
+            <div id="tabAllStudents" class="admin-tab" style="display: none;">
+                <div class="admin-card">
+                    <div class="card-title">
+                        Rekap Kehadiran Semua Siswa
+                        <div>
+                            <select id="monthSelect" onchange="loadAllStudentsData()" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc; margin-right: 10px;">
+                                <option value="0">Januari</option>
+                                <option value="1">Februari</option>
+                                <option value="2">Maret</option>
+                                <option value="3">April</option>
+                                <option value="4">Mei</option>
+                                <option value="5">Juni</option>
+                                <option value="6">Juli</option>
+                                <option value="7">Agustus</option>
+                                <option value="8">September</option>
+                                <option value="9">Oktober</option>
+                                <option value="10">November</option>
+                                <option value="11">Desember</option>
+                            </select>
+                            <select id="yearSelectStudents" onchange="loadAllStudentsData()" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;">
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="allStudentsTableContainer">
+                        <!-- Tabel siswa akan di-load oleh JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 3: Pengajuan Menunggu -->
+            <div id="tabPending" class="admin-tab" style="display: none;">
+                <div class="admin-card">
+                    <div class="card-title">Pengajuan Izin/Sakit Menunggu Konfirmasi</div>
+                    <div class="pending-list" id="pendingList">
+                        <!-- Daftar pengajuan akan di-load oleh JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 4: Input Alpha -->
+            <div id="tabAddAlpha" class="admin-tab" style="display: none;">
+                <div class="admin-card">
+                    <div class="card-title">Input Alpha (Tanpa Keterangan)</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <div class="label">Pilih Siswa</div>
+                            <select id="studentSelect" class="form-input" style="margin-bottom: 15px;">
+                                <!-- Opsi siswa akan diisi oleh JavaScript -->
+                            </select>
+                            
+                            <div class="label">Tanggal</div>
+                            <input type="date" id="alphaDate" class="form-input" style="margin-bottom: 15px;" value="2026-01-27">
+                            
+                            <button class="submit-btn" onclick="addAlphaRecord()">Tambah Alpha</button>
+                        </div>
+                        
+                        <div>
+                            <div class="label">Alpha Terbaru</div>
+                            <div id="alphaHistory" style="max-height: 300px; overflow-y: auto; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                                <!-- Riwayat alpha akan diisi oleh JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== MODAL PILIHAN ABSEN ===== -->
+    <div id="modalPilihan" class="modal-overlay">
+        <div class="modal-pilihan">
+            <div class="modal-title-pilihan">Pilihan Absensi</div>
+            <button class="modal-btn modal-btn-absen" onclick="absenSekarang()">Absen Sekarang</button>
+            <button class="modal-btn modal-btn-izin" onclick="ajukanIzin()">Ajukan Izin/Sakit</button>
+            <button class="modal-btn modal-btn-batal" onclick="tutupModalPilihan()">Batal</button>
+        </div>
+    </div>
+    
+    <!-- ===== MODAL PROFIL ===== -->
+    <div id="modalProfil" class="modal-overlay">
+        <div class="modal-pilihan">
+            <div class="modal-title-pilihan">Profil Siswa</div>
+            <div style="text-align: left; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #2f80ed, #56ccf2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;" id="profileModalInitial">
+                        SA
+                    </div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 16px;" id="profileModalNama">Siti Nur Afifah</div>
+                        <div style="font-size: 12px; color: #666;" id="profileModalKelas">X RPL 3</div>
+                    </div>
+                </div>
+                <div style="font-size: 14px; margin-bottom: 10px;">
+                    <strong>ID Siswa:</strong> <span id="profileModalId">1234</span>
+                </div>
+                <div style="font-size: 14px; margin-bottom: 10px;">
+                    <strong>Status:</strong> <span style="color: #4caf50;">Aktif</span>
+                </div>
+            </div>
+            <button class="modal-btn modal-btn-batal" onclick="logout()">Logout</button>
+            <button class="modal-btn modal-btn-batal" onclick="tutupModalProfil()" style="margin-top: 10px;">Tutup</button>
+        </div>
+    </div>
+    
+    <!-- ===== NOTIFIKASI ===== -->
+    <div id="notification" class="notification success" style="display: none;">
+        <div id="notificationText">Absensi berhasil diajukan!</div>
+    </div>
+    
+    <!-- Modal untuk edit status kehadiran -->
+    <div id="attendanceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Ubah Status Kehadiran</div>
+                <div class="modal-close" onclick="closeModal()">×</div>
+            </div>
+            <div id="modalBody">
+                <!-- Konten modal akan diisi oleh JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data dan variabel global
+        let currentUser = null;
+        let currentRole = null;
+        
+        // Data siswa lainnya (nama-nama telah diubah, kelas diubah menjadi X RPL 3)
+        const allStudents = [
+            { id: "1234", nama: "Siti Nur Afifah", kelas: "X RPL 3" },
+            { id: "1235", nama: "Nur Aini Fatimatuz Zahroh", kelas: "X RPL 3" },
+            { id: "1236", nama: "Opie Nur Ramadhani", kelas: "X RPL 3" },
+            { id: "1237", nama: "Alquraini Aulia Putri", kelas: "X RPL 3" },
+            { id: "1238", nama: "Desitha Kurnia Putri", kelas: "X RPL 3" }
+        ];
+        
+        // Data kehadiran semua siswa
+        let attendanceData = {};
+        
+        // Data pengajuan yang menunggu konfirmasi
+        let pendingSubmissions = [];
+        
+        // Hari libur nasional Indonesia 2026 (contoh)
+        // JUMAT TIDAK DIMASUKKAN SEBAGAI LIBUR
+        const holidays2026 = [
+            "2026-01-01", // Tahun Baru
+            "2026-03-03", // Isra Mi'raj
+            "2026-03-28", // Hari Raya Nyepi
+            "2026-04-02", // Jumat Agung
+            "2026-04-10", // Idul Fitri
+            "2026-04-11", // Idul Fitri
+            "2026-05-01", // Hari Buruh
+            "2026-05-14", // Kenaikan Isa Almasih
+            "2026-05-26", // Hari Raya Waisak
+            "2026-06-01", // Hari Lahir Pancasila
+            "2026-07-17", // Idul Adha
+            "2026-08-17", // Hari Kemerdekaan
+            "2026-09-05", // Tahun Baru Islam
+            "2026-12-25", // Natal
+        ];
+        
+        // Fungsi login
+        function login(event) {
+            event.preventDefault();
+            
+            let nama = document.getElementById("nama").value;
+            let id = document.getElementById("id").value;
+            let role = document.getElementById("role").value;
+            
+            // Cek login admin
+            if (role === "admin" && nama === "Siti Nur Afifah" && id === "1234") {
+                currentUser = allStudents.find(s => s.nama === nama && s.id === id);
+                currentRole = role;
+                
+                // Tampilkan dashboard admin
+                document.getElementById("login").style.display = "none";
+                document.getElementById("adminDashboard").style.display = "block";
+                document.getElementById("adminName").textContent = nama + " (Admin)";
+                
+                // Inisialisasi data admin
+                initializeAdminData();
+                
+            } else if (role === "siswa") {
+                // Cek login siswa
+                let siswa = allStudents.find(s => s.nama === nama && s.id === id);
+                
+                if (siswa) {
+                    currentUser = siswa;
+                    currentRole = role;
+                    
+                    // Tampilkan halaman home siswa
+                    document.getElementById("login").style.display = "none";
+                    document.getElementById("home").style.display = "block";
+                    
+                    // Update navbar active state
+                    updateNavActive('home');
+                    
+                    // Tampilkan log absensi
+                    updateStudentLog();
+                    
+                    // Update profil
+                    updateProfile();
+                } else {
+                    alert("Nama atau ID siswa salah!");
+                }
+            } else {
+                alert("Login gagal! Periksa kembali data Anda.");
+            }
+        }
+        
+        // Fungsi inisialisasi data admin
+        function initializeAdminData() {
+            // Inisialisasi data kehadiran
+            allStudents.forEach(student => {
+                attendanceData[student.id] = student.id === "1234" ? 
+                    [
+                        { tanggal: "2026-01-27", status: "Hadir", confirmed: true },
+                        { tanggal: "2026-01-26", status: "Sakit", confirmed: true }
+                    ] : 
+                    [
+                        { tanggal: "2026-01-27", status: "Hadir", confirmed: true },
+                        { tanggal: "2026-01-26", status: "Hadir", confirmed: true }
+                    ];
+            });
+            
+            // Generate kalender
+            generateYearCalendar();
+            
+            // Load data semua siswa
+            loadAllStudentsData();
+            
+            // Load data pengajuan menunggu
+            loadPendingSubmissions();
+            
+            // Setup dropdown siswa untuk input alpha
+            setupStudentSelect();
+            
+            // Load riwayat alpha
+            loadAlphaHistory();
+        }
+        
+        // Fungsi logout
+        function logout() {
+            currentUser = null;
+            currentRole = null;
+            
+            hideAllPages();
+            document.getElementById("login").style.display = "flex";
+            
+            // Reset form login
+            document.getElementById("nama").value = "";
+            document.getElementById("id").value = "";
+            
+            // Tutup modal profil jika terbuka
+            tutupModalProfil();
+        }
+        
+        // Fungsi navigasi antar halaman (siswa)
+        function showHome() {
+            hideAllPages();
+            document.getElementById("home").style.display = "block";
+            updateNavActive('home');
+            updateStudentLog();
+        }
+        
+        function showRekap() {
+            hideAllPages();
+            document.getElementById("rekap").style.display = "block";
+            updateNavActive('rekap');
+            
+            // Update data rekap
+            updateRekapData();
+        }
+        
+        // Fungsi untuk navigasi admin tab
+        function showAdminTab(tabName) {
+            // Sembunyikan semua tab
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Hapus active dari semua nav item
+            document.querySelectorAll('.admin-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Tampilkan tab yang dipilih
+            document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).style.display = 'block';
+            
+            // Set active pada nav item
+            event.target.classList.add('active');
+        }
+        
+        // Fungsi untuk menyembunyikan semua halaman
+        function hideAllPages() {
+            document.getElementById("login").style.display = "none";
+            document.getElementById("home").style.display = "none";
+            document.getElementById("formIzin").style.display = "none";
+            document.getElementById("rekap").style.display = "none";
+            document.getElementById("adminDashboard").style.display = "none";
+        }
+        
+        // Fungsi update status aktif navbar
+        function updateNavActive(page) {
+            // Reset semua nav item
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Set active sesuai halaman
+            if (page === 'home') {
+                document.querySelectorAll('.nav-item')[0].classList.add('active');
+            } else if (page === 'rekap') {
+                document.querySelectorAll('.nav-item')[1].classList.add('active');
+            }
+        }
+        
+        // Fungsi update log siswa
+        function updateStudentLog() {
+            if (!currentUser) return;
+            
+            let logHTML = "";
+            const userLog = attendanceData[currentUser.id] || [];
+            
+            // Tampilkan 5 log terbaru
+            const recentLogs = userLog.slice(0, 5);
+            
+            recentLogs.forEach(l => {
+                const dateObj = new Date(l.tanggal);
+                const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+                const formattedDate = dateObj.toLocaleDateString('id-ID', options);
+                
+                let statusClass = '';
+                if (l.status === 'Hadir') statusClass = 'status-hadir';
+                else if (l.status === 'Izin') statusClass = 'status-izin';
+                else if (l.status === 'Sakit') statusClass = 'status-sakit';
+                else if (l.status === 'Alpha') statusClass = 'status-alpha';
+                else statusClass = 'status-menunggu';
+                
+                let confirmIcon = l.confirmed ? '✓' : '⏳';
+                
+                logHTML += `
+                    <div class="log-item">
+                        <div>
+                            <div class="tanggal">${formattedDate}</div>
+                            <div class="status ${statusClass}">${l.status} ${l.confirmed ? '' : '(Menunggu)'}</div>
+                        </div>
+                        <div style="color: ${l.confirmed ? '#4CAF50' : '#FF9800'};">
+                            ${confirmIcon}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById("logData").innerHTML = logHTML;
+        }
+        
+        // Fungsi update profil
+        function updateProfile() {
+            if (!currentUser) return;
+            
+            // Ambil inisial dari nama
+            const nameParts = currentUser.nama.split(' ');
+            let initials = '';
+            if (nameParts.length >= 2) {
+                initials = nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0);
+            } else {
+                initials = currentUser.nama.substring(0, 2);
+            }
+            initials = initials.toUpperCase();
+            
+            // Update di navbar home
+            document.getElementById('profileInitial').textContent = initials;
+            document.getElementById('profileInitialRekap').textContent = initials;
+            
+            // Update di modal profil
+            document.getElementById('profileModalInitial').textContent = initials;
+            document.getElementById('profileModalNama').textContent = currentUser.nama;
+            document.getElementById('profileModalKelas').textContent = currentUser.kelas;
+            document.getElementById('profileModalId').textContent = currentUser.id;
+        }
+        
+        // Fungsi show profil modal
+        function showProfile() {
+            document.getElementById('modalProfil').style.display = 'flex';
+        }
+        
+        // Fungsi tutup modal profil
+        function tutupModalProfil() {
+            document.getElementById('modalProfil').style.display = 'none';
+        }
+        
+        // ===== FUNGSI ABSENSI =====
+        // Fungsi tampilkan modal pilihan absen
+        function showPilihanAbsen() {
+            document.getElementById('modalPilihan').style.display = 'flex';
+        }
+        
+        // Fungsi tutup modal pilihan
+        function tutupModalPilihan() {
+            document.getElementById('modalPilihan').style.display = 'none';
+        }
+        
+        // Fungsi absen sekarang
+        function absenSekarang() {
+            if (!currentUser) return;
+            
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Cek apakah sudah absen hari ini
+            const todayLog = (attendanceData[currentUser.id] || []).find(l => l.tanggal === today);
+            
+            if (todayLog) {
+                showNotification('Anda sudah melakukan absensi hari ini!', 'warning');
+                tutupModalPilihan();
+                return;
+            }
+            
+            // Tambah absensi dengan status menunggu
+            if (!attendanceData[currentUser.id]) {
+                attendanceData[currentUser.id] = [];
+            }
+            
+            attendanceData[currentUser.id].unshift({
+                tanggal: today,
+                status: 'Hadir',
+                confirmed: false
+            });
+            
+            // Tambah ke pending submissions untuk admin
+            pendingSubmissions.push({
+                id: Date.now(),
+                siswaId: currentUser.id,
+                siswaNama: currentUser.nama,
+                jenis: 'Hadir',
+                tanggal: today,
+                deskripsi: 'Absensi harian',
+                status: "Menunggu"
+            });
+            
+            showNotification('Absensi berhasil diajukan! Menunggu konfirmasi admin.', 'success');
+            tutupModalPilihan();
+            
+            // Update log siswa
+            updateStudentLog();
+        }
+        
+        // Fungsi ajukan izin
+        function ajukanIzin() {
+            tutupModalPilihan();
+            showFormIzin();
+        }
+        
+        // Fungsi show form izin
+        function showFormIzin() {
+            hideAllPages();
+            document.getElementById("formIzin").style.display = "block";
+            updateNavActive('none');
+            
+            // Set tanggal default ke hari ini
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("tanggalIzin").value = today;
+        }
+        
+        // ===== FUNGSI FORM IZIN/SAKIT =====
+        // Fungsi set jenis pengajuan (izin/sakit)
+        function setJenis(jenis) {
+            document.getElementById("izinBtn").classList.remove("active");
+            document.getElementById("sakitBtn").classList.remove("active");
+            
+            if (jenis === "Izin") {
+                document.getElementById("izinBtn").classList.add("active");
+            } else {
+                document.getElementById("sakitBtn").classList.add("active");
+            }
+        }
+        
+        // Fungsi preview foto
+        function previewFoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById("preview").src = reader.result;
+                document.getElementById("preview").style.display = "block";
+                document.getElementById("uploadText").style.display = "none";
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Fungsi kirim pengajuan (siswa)
+        function kirimPengajuan() {
+            if (!currentUser) return;
+            
+            // Ambil nilai form
+            const jenis = document.querySelector(".toggle .active").textContent;
+            const tanggal = document.getElementById("tanggalIzin").value;
+            const deskripsi = document.getElementById("deskripsi").value;
+            
+            // Validasi
+            if (!tanggal) {
+                showNotification('Harap isi tanggal!', 'warning');
+                return;
+            }
+            
+            if (!deskripsi.trim()) {
+                showNotification('Harap isi deskripsi!', 'warning');
+                return;
+            }
+            
+            // Tambah ke pengajuan menunggu
+            const submission = {
+                id: Date.now(),
+                siswaId: currentUser.id,
+                siswaNama: currentUser.nama,
+                jenis: jenis,
+                tanggal: tanggal,
+                deskripsi: deskripsi,
+                status: "Menunggu"
+            };
+            
+            pendingSubmissions.push(submission);
+            
+            // Tambah ke log siswa dengan status menunggu
+            if (!attendanceData[currentUser.id]) {
+                attendanceData[currentUser.id] = [];
+            }
+            
+            attendanceData[currentUser.id].unshift({
+                tanggal: tanggal,
+                status: jenis,
+                confirmed: false
+            });
+            
+            showNotification(`Pengajuan ${jenis} berhasil dikirim!\nMenunggu konfirmasi admin.`, 'success');
+            
+            // Update log siswa
+            updateStudentLog();
+            
+            // Kembali ke halaman home
+            showHome();
+        }
+        
+        // Fungsi show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Fungsi update data rekap siswa
+        function updateRekapData() {
+            if (!currentUser) return;
+            
+            // Hitung dari data kehadiran
+            const userLog = attendanceData[currentUser.id] || [];
+            const filteredLog = filterLogByDate(userLog);
+            
+            const hadir = filteredLog.filter(l => l.status === 'Hadir' && l.confirmed).length;
+            const izin = filteredLog.filter(l => l.status === 'Izin' && l.confirmed).length;
+            const sakit = filteredLog.filter(l => l.status === 'Sakit' && l.confirmed).length;
+            const alpha = filteredLog.filter(l => l.status === 'Alpha').length;
+            const total = hadir + izin + sakit + alpha;
+            
+            // Hitung persentase
+            const persenHadir = total > 0 ? Math.round((hadir / total) * 100) : 0;
+            const persenTidakHadir = total > 0 ? Math.round(((izin + sakit + alpha) / total) * 100) : 0;
+            
+            // Update elemen dengan data rekap
+            document.getElementById('namaRekap').textContent = currentUser.nama;
+            document.getElementById('persenHadir').textContent = persenHadir + '%';
+            document.getElementById('persenTidakHadir').textContent = persenTidakHadir + '%';
+            document.getElementById('countHadir').textContent = hadir + 'x';
+            document.getElementById('countTidakHadir').textContent = (izin + sakit + alpha) + 'x';
+            
+            // Update detail
+            document.getElementById('detailHadir').textContent = hadir + ' hari';
+            document.getElementById('detailIzin').textContent = izin + ' hari';
+            document.getElementById('detailSakit').textContent = sakit + ' hari';
+            document.getElementById('detailAlpha').textContent = alpha + ' hari';
+            document.getElementById('totalHari').textContent = total + ' hari';
+            
+            // Update diagram lingkaran dengan warna conic gradient
+            const circleBg = document.getElementById('circleBg');
+            const gradValue = persenTidakHadir; // Mulai dengan tidak hadir (merah)
+            circleBg.style.background = `conic-gradient(#ff6b6b 0% ${gradValue}%, #4facfe ${gradValue}% 100%)`;
+            
+            // Update total percentage
+            document.getElementById('totalPercentage').textContent = persenHadir + '%';
+            
+            // Update tanggal
+            const today = new Date();
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('lastUpdate').textContent = today.toLocaleDateString('id-ID', options);
+        }
+        
+        // Fungsi filter log berdasarkan tanggal
+        function filterLogByDate(log) {
+            const bulanAwal = parseInt(document.getElementById('filterBulanAwal').value);
+            const bulanAkhir = parseInt(document.getElementById('filterBulanAkhir').value);
+            const tahun = parseInt(document.getElementById('filterTahun').value);
+            
+            return log.filter(item => {
+                const date = new Date(item.tanggal);
+                const itemMonth = date.getMonth();
+                const itemYear = date.getFullYear();
+                
+                return itemYear === tahun && itemMonth >= bulanAwal && itemMonth <= bulanAkhir;
+            });
+        }
+        
+        // Fungsi filter rekap
+        function filterRekap() {
+            updateRekapData();
+            
+            // Update judul periode
+            const bulanAwal = document.getElementById('filterBulanAwal').options[document.getElementById('filterBulanAwal').selectedIndex].text;
+            const bulanAkhir = document.getElementById('filterBulanAkhir').options[document.getElementById('filterBulanAkhir').selectedIndex].text;
+            const tahun = document.getElementById('filterTahun').value;
+            
+            document.querySelector('.detail-title').textContent = 
+                `Detail Kehadiran (Periode: ${bulanAwal} ${tahun} - ${bulanAkhir} ${tahun})`;
+        }
+        
+        // ===== FUNGSI ADMIN =====
+        // Fungsi generate kalender 1 tahun (JUMAT TIDAK LIBUR)
+        function generateYearCalendar() {
+            const year = parseInt(document.getElementById('yearSelect').value);
+            const container = document.getElementById('calendarContainer');
+            
+            let html = `<table class="attendance-table">`;
+            
+            // Header tabel
+            html += `<thead><tr>`;
+            const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+                          "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            
+            months.forEach(month => {
+                html += `<th colspan="7" class="month-header">${month} ${year}</th>`;
+            });
+            html += `</tr><tr>`;
+            
+            // Hari dalam seminggu (diulang 12 kali untuk 12 bulan)
+            for (let i = 0; i < 12; i++) {
+                html += `
+                    <th>M</th>
+                    <th>S</th>
+                    <th>S</th>
+                    <th>R</th>
+                    <th>K</th>
+                    <th>J</th>
+                    <th>S</th>
+                `;
+            }
+            html += `</tr></thead><tbody>`;
+            
+            // Data untuk setiap bulan
+            const monthRows = Array(12).fill().map(() => []);
+            
+            for (let month = 0; month < 12; month++) {
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const firstDay = new Date(year, month, 1).getDay();
+                
+                // Sesuaikan hari minggu (Minggu=0 menjadi Minggu=6)
+                let startDay = firstDay === 0 ? 6 : firstDay - 1;
+                
+                let currentWeek = Array(7).fill('');
+                
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const isHoliday = holidays2026.includes(dateStr);
+                    const dayOfWeek = new Date(year, month, day).getDay();
+                    const isSunday = dayOfWeek === 0; // Hanya Minggu yang libur
+                    
+                    // Dapatkan data kehadiran untuk Siti Nur Afifah
+                    let attendanceStatus = '';
+                    let cellClass = 'day-cell';
+                    
+                    if (isHoliday || isSunday) {
+                        cellClass += ' libur';
+                        attendanceStatus = 'LIBUR';
+                    } else {
+                        // Cek data kehadiran
+                        const logEntry = attendanceData['1234']?.find(l => l.tanggal === dateStr);
+                        if (logEntry) {
+                            cellClass += ' ' + logEntry.status.toLowerCase();
+                            attendanceStatus = logEntry.status;
+                        }
+                    }
+                    
+                    currentWeek[startDay] = `
+                        <div class="day-number">${day}</div>
+                        ${attendanceStatus ? `<div class="attendance-status">${attendanceStatus}</div>` : ''}
+                    `;
+                    
+                    startDay++;
+                    
+                    if (startDay === 7 || day === daysInMonth) {
+                        monthRows[month].push([...currentWeek]);
+                        currentWeek = Array(7).fill('');
+                        startDay = 0;
+                    }
+                }
+            }
+            
+            // Cari jumlah baris maksimum
+            const maxRows = Math.max(...monthRows.map(rows => rows.length));
+            
+            // Render baris per baris
+            for (let row = 0; row < maxRows; row++) {
+                html += `<tr>`;
+                
+                for (let month = 0; month < 12; month++) {
+                    const weekData = monthRows[month][row] || Array(7).fill('');
+                    
+                    weekData.forEach((dayContent, dayIndex) => {
+                        const date = new Date(year, month, row * 7 + dayIndex - (monthRows[month][0]?.findIndex(d => d !== '') || 0) + 1);
+                        const dateStr = date.toISOString().split('T')[0];
+                        const isHoliday = holidays2026.includes(dateStr);
+                        const dayOfWeek = date.getDay();
+                        const isSunday = dayOfWeek === 0; // Hanya Minggu yang libur
+                        
+                        if (dayContent) {
+                            html += `<td class="day-cell" onclick="showAttendanceModal('1234', '${dateStr}', ${isHoliday || isSunday})">
+                                ${dayContent}
+                            </td>`;
+                        } else {
+                            html += `<td></td>`;
+                        }
+                    });
+                }
+                
+                html += `</tr>`;
+            }
+            
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+        
+        // Fungsi load data semua siswa (dengan tabel yang lebih kecil)
+        function loadAllStudentsData() {
+            const month = parseInt(document.getElementById('monthSelect').value);
+            const year = parseInt(document.getElementById('yearSelectStudents').value);
+            const container = document.getElementById('allStudentsTableContainer');
+            
+            let html = `
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;">No</th>
+                            <th style="min-width: 180px;">Nama Siswa</th>
+                            <th style="width: 80px;">Kelas</th>
+                            <th style="width: 50px;">Hadir</th>
+                            <th style="width: 50px;">Izin</th>
+                            <th style="width: 50px;">Sakit</th>
+                            <th style="width: 50px;">Alpha</th>
+                            <th style="width: 100px;">Persentase</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            allStudents.forEach((student, index) => {
+                // Hitung kehadiran bulan ini
+                const monthLog = (attendanceData[student.id] || []).filter(log => {
+                    const logDate = new Date(log.tanggal);
+                    return logDate.getMonth() === month && 
+                           logDate.getFullYear() === year &&
+                           log.confirmed;
+                });
+                
+                const hadir = monthLog.filter(l => l.status === 'Hadir').length;
+                const izin = monthLog.filter(l => l.status === 'Izin').length;
+                const sakit = monthLog.filter(l => l.status === 'Sakit').length;
+                const alpha = monthLog.filter(l => l.status === 'Alpha').length;
+                const total = hadir + izin + sakit + alpha;
+                const percentage = total > 0 ? Math.round((hadir / total) * 100) : 0;
+                
+                html += `
+                    <tr class="student-row">
+                        <td>${index + 1}</td>
+                        <td>${student.nama}</td>
+                        <td>${student.kelas}</td>
+                        <td>${hadir}</td>
+                        <td>${izin}</td>
+                        <td>${sakit}</td>
+                        <td>${alpha}</td>
+                        <td>
+                            <div>${percentage}%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${percentage}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+        
+        // Fungsi load pengajuan menunggu
+        function loadPendingSubmissions() {
+            const container = document.getElementById('pendingList');
+            
+            if (pendingSubmissions.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">Tidak ada pengajuan menunggu</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            pendingSubmissions.forEach(submission => {
+                const dateObj = new Date(submission.tanggal);
+                const formattedDate = dateObj.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                
+                html += `
+                    <div class="pending-item">
+                        <div class="pending-info">
+                            <div class="pending-name">${submission.siswaNama}</div>
+                            <div class="pending-date">${formattedDate}</div>
+                            <div class="pending-reason">${submission.jenis} - ${submission.deskripsi}</div>
+                        </div>
+                        <div class="pending-actions">
+                            <button class="btn-approve" onclick="approveSubmission(${submission.id})">Setujui</button>
+                            <button class="btn-reject" onclick="rejectSubmission(${submission.id})">Tolak</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Fungsi approve pengajuan
+        function approveSubmission(submissionId) {
+            const submissionIndex = pendingSubmissions.findIndex(s => s.id === submissionId);
+            
+            if (submissionIndex !== -1) {
+                const submission = pendingSubmissions[submissionIndex];
+                
+                // Update status di data kehadiran
+                const studentLog = attendanceData[submission.siswaId];
+                if (studentLog) {
+                    const logIndex = studentLog.findIndex(l => 
+                        l.tanggal === submission.tanggal && 
+                        l.status === submission.jenis && 
+                        !l.confirmed
+                    );
+                    
+                    if (logIndex !== -1) {
+                        studentLog[logIndex].confirmed = true;
+                    }
+                }
+                
+                // Hapus dari pending
+                pendingSubmissions.splice(submissionIndex, 1);
+                
+                // Reload data
+                loadPendingSubmissions();
+                loadAllStudentsData();
+                showNotification(`Pengajuan ${submission.jenis} dari ${submission.siswaNama} telah disetujui!`, 'success');
+            }
+        }
+        
+        // Fungsi reject pengajuan
+        function rejectSubmission(submissionId) {
+            const submissionIndex = pendingSubmissions.findIndex(s => s.id === submissionId);
+            
+            if (submissionIndex !== -1) {
+                const submission = pendingSubmissions[submissionIndex];
+                
+                // Hapus dari data kehadiran
+                const studentLog = attendanceData[submission.siswaId];
+                if (studentLog) {
+                    const logIndex = studentLog.findIndex(l => 
+                        l.tanggal === submission.tanggal && 
+                        l.status === submission.jenis && 
+                        !l.confirmed
+                    );
+                    
+                    if (logIndex !== -1) {
+                        studentLog.splice(logIndex, 1);
+                    }
+                }
+                
+                // Hapus dari pending
+                pendingSubmissions.splice(submissionIndex, 1);
+                
+                // Reload data
+                loadPendingSubmissions();
+                loadAllStudentsData();
+                showNotification(`Pengajuan ${submission.jenis} dari ${submission.siswaNama} telah ditolak!`, 'warning');
+            }
+        }
+        
+        // Fungsi setup dropdown siswa untuk input alpha
+        function setupStudentSelect() {
+            const select = document.getElementById('studentSelect');
+            select.innerHTML = '';
+            
+            allStudents.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.nama} (${student.kelas})`;
+                select.appendChild(option);
+            });
+        }
+        
+        // Fungsi tambah alpha
+        function addAlphaRecord() {
+            const studentId = document.getElementById('studentSelect').value;
+            const date = document.getElementById('alphaDate').value;
+            
+            if (!studentId || !date) {
+                showNotification('Harap pilih siswa dan tanggal!', 'warning');
+                return;
+            }
+            
+            const student = allStudents.find(s => s.id === studentId);
+            
+            // Tambah ke data kehadiran
+            if (!attendanceData[studentId]) {
+                attendanceData[studentId] = [];
+            }
+            
+            // Cek apakah sudah ada data di tanggal tersebut
+            const existingIndex = attendanceData[studentId].findIndex(l => l.tanggal === date);
+            
+            if (existingIndex !== -1) {
+                // Update status menjadi Alpha
+                attendanceData[studentId][existingIndex] = {
+                    tanggal: date,
+                    status: 'Alpha',
+                    confirmed: true
+                };
+            } else {
+                // Tambah data baru
+                attendanceData[studentId].unshift({
+                    tanggal: date,
+                    status: 'Alpha',
+                    confirmed: true
+                });
+            }
+            
+            showNotification(`Alpha berhasil dicatat untuk ${student.nama} pada ${date}`, 'success');
+            
+            // Reset form
+            document.getElementById('alphaDate').value = '2026-01-27';
+            
+            // Update riwayat alpha
+            loadAlphaHistory();
+            
+            // Reload data jika perlu
+            if (currentRole === 'admin') {
+                loadAllStudentsData();
+            }
+        }
+        
+        // Fungsi load riwayat alpha
+        function loadAlphaHistory() {
+            const container = document.getElementById('alphaHistory');
+            
+            // Kumpulkan semua data alpha
+            let alphaRecords = [];
+            
+            allStudents.forEach(student => {
+                const studentAlphas = (attendanceData[student.id] || [])
+                    .filter(l => l.status === 'Alpha')
+                    .map(l => ({
+                        siswa: student.nama,
+                        tanggal: l.tanggal,
+                        kelas: student.kelas
+                    }));
+                
+                alphaRecords = alphaRecords.concat(studentAlphas);
+            });
+            
+            // Urutkan berdasarkan tanggal terbaru
+            alphaRecords.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+            
+            // Ambil 10 terbaru
+            const recentAlphas = alphaRecords.slice(0, 10);
+            
+            if (recentAlphas.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 10px; color: #666;">Belum ada data alpha</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            recentAlphas.forEach(record => {
+                const dateObj = new Date(record.tanggal);
+                const formattedDate = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                
+                html += `
+                    <div style="padding: 8px; border-bottom: 1px solid #eee; font-size: 12px;">
+                        <div><strong>${record.siswa}</strong> (${record.kelas})</div>
+                        <div style="color: #666;">${formattedDate}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Fungsi show modal untuk edit kehadiran
+        function showAttendanceModal(studentId, date, isDisabled) {
+            if (isDisabled) {
+                showNotification('Tanggal ini adalah hari libur. Tidak dapat mengubah kehadiran.', 'warning');
+                return;
+            }
+            
+            const student = allStudents.find(s => s.id === studentId);
+            const currentStatus = attendanceData[studentId]?.find(l => l.tanggal === date)?.status || 'Belum diisi';
+            
+            const modalBody = document.getElementById('modalBody');
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <div><strong>Siswa:</strong> ${student.nama}</div>
+                    <div><strong>Tanggal:</strong> ${formattedDate}</div>
+                    <div><strong>Status Saat Ini:</strong> ${currentStatus}</div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <div class="label">Ubah Status Ke:</div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
+                        <button onclick="updateAttendance('${studentId}', '${date}', 'Hadir')" 
+                                style="padding: 10px; background: #4facfe; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                            Hadir
+                        </button>
+                        <button onclick="updateAttendance('${studentId}', '${date}', 'Izin')" 
+                                style="padding: 10px; background: #ff9800; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                            Izin
+                        </button>
+                        <button onclick="updateAttendance('${studentId}', '${date}', 'Sakit')" 
+                                style="padding: 10px; background: #f44336; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                            Sakit
+                        </button>
+                        <button onclick="updateAttendance('${studentId}', '${date}', 'Alpha')" 
+                                style="padding: 10px; background: #757575; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                            Alpha
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="text-align: right;">
+                    <button onclick="deleteAttendance('${studentId}', '${date}')" 
+                            style="padding: 8px 16px; background: #f44336; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 10px;">
+                        Hapus Data
+                    </button>
+                    <button onclick="closeModal()" 
+                            style="padding: 8px 16px; background: #ccc; color: #333; border: none; border-radius: 6px; cursor: pointer;">
+                        Batal
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('attendanceModal').style.display = 'flex';
+        }
+        
+        // Fungsi update kehadiran
+        function updateAttendance(studentId, date, status) {
+            if (!attendanceData[studentId]) {
+                attendanceData[studentId] = [];
+            }
+            
+            // Cek apakah sudah ada data di tanggal tersebut
+            const existingIndex = attendanceData[studentId].findIndex(l => l.tanggal === date);
+            
+            if (existingIndex !== -1) {
+                // Update status
+                attendanceData[studentId][existingIndex] = {
+                    tanggal: date,
+                    status: status,
+                    confirmed: true
+                };
+            } else {
+                // Tambah data baru
+                attendanceData[studentId].unshift({
+                    tanggal: date,
+                    status: status,
+                    confirmed: true
+                });
+            }
+            
+            showNotification(`Status kehadiran berhasil diubah menjadi ${status}`, 'success');
+            closeModal();
+            
+            // Reload data
+            generateYearCalendar();
+            loadAllStudentsData();
+            
+            // Jika yang login adalah siswa itu sendiri, update log
+            if (currentUser && currentUser.id === studentId) {
+                updateStudentLog();
+                updateRekapData();
+            }
+        }
+        
+        // Fungsi hapus data kehadiran
+        function deleteAttendance(studentId, date) {
+            if (confirm('Apakah Anda yakin ingin menghapus data kehadiran ini?')) {
+                if (attendanceData[studentId]) {
+                    const index = attendanceData[studentId].findIndex(l => l.tanggal === date);
+                    if (index !== -1) {
+                        attendanceData[studentId].splice(index, 1);
+                        showNotification('Data kehadiran berhasil dihapus!', 'success');
+                    }
+                }
+                
+                closeModal();
+                generateYearCalendar();
+                loadAllStudentsData();
+            }
+        }
+        
+        // Fungsi close modal
+        function closeModal() {
+            document.getElementById('attendanceModal').style.display = 'none';
+        }
+        
+        // Event listener untuk tombol absen di home page
+        document.addEventListener("DOMContentLoaded", function() {
+            const btn = document.getElementById("btnAbsen");
+            if (btn) {
+                btn.addEventListener("click", function() {
+                    showPilihanAbsen();
+                });
+            }
+            
+            // Set tanggal default
+            const today = new Date().toISOString().split('T')[0];
+            if (document.getElementById("tanggalIzin")) {
+                document.getElementById("tanggalIzin").value = today;
+            }
+            if (document.getElementById("alphaDate")) {
+                document.getElementById("alphaDate").value = today;
+            }
+            
+            // Set filter bulan default
+            const currentMonth = new Date().getMonth();
+            if (document.getElementById("filterBulanAwal")) {
+                document.getElementById("filterBulanAwal").value = currentMonth;
+                document.getElementById("filterBulanAkhir").value = currentMonth;
+            }
+            
+            // Initialize data attendance
+            allStudents.forEach(student => {
+                if (!attendanceData[student.id]) {
+                    attendanceData[student.id] = student.id === "1234" ? 
+                        [
+                            { tanggal: "2026-01-27", status: "Hadir", confirmed: true },
+                            { tanggal: "2026-01-26", status: "Sakit", confirmed: true }
+                        ] : 
+                        [
+                            { tanggal: "2026-01-27", status: "Hadir", confirmed: true },
+                            { tanggal: "2026-01-26", status: "Hadir", confirmed: true }
+                        ];
+                }
+            });
+        });
+    </script>
+</body>
+  </html>
